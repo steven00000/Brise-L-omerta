@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brise Lomerta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --pink: #ff6ec7;
+      --yellow: #ffd166;
+      --blue: #49c6e5;
+      --dark: #101010;
+      --gray: #1c1c1c;
+      --white: #fff;
+    }
+    html, body {
+      background: var(--dark);
+      color: var(--white);
+      font-family: "Bungee", cursive;
+      margin: 0; padding: 0; min-height: 100vh;
+    }
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg,var(--pink),var(--yellow),var(--blue));
+      -webkit-background-clip: text;
+      color: transparent;
+      margin: 32px 0 16px 0;
+      text-shadow: 0 3px 24px #000a;
+      animation: fadeinDown 1s cubic-bezier(.68,-0.2,.45,1.2);
+    }
+    #main {
+      max-width: 480px;
+      background: var(--gray);
+      margin: 0 auto 32px;
+      border-radius: 20px;
+      box-shadow: 0 6px 32px #000a;
+      padding: 30px 16px 28px;
+      min-height: 300px;
+      animation: fadeinUp 0.7s;
+    }
+    .fade-in { animation: fadeinUp 0.7s; }
+    .result-anim { animation: fadeinPop 0.7s; }
+    @keyframes fadeinDown { from {opacity:0;transform:translateY(-32px);} to {opacity:1;transform:translateY(0);} }
+    @keyframes fadeinUp { from {opacity:0;transform:translateY(42px);} to {opacity:1;transform:translateY(0);} }
+    @keyframes fadeinPop { from {opacity:0;transform:scale(0.7);} to {opacity:1;transform:scale(1);} }
+
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      color: var(--yellow);
+      letter-spacing: 1px;
+    }
+    input {
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      padding: 12px 16px;
+      margin: 8px 0;
+      width: 75%;
+      box-shadow: 0 2px 8px #0004;
+      transition: box-shadow 0.2s;
+      background: #232323;
+      color: var(--white);
+      text-align: center;
+    }
+    input:focus { box-shadow: 0 0 0 3px var(--pink); }
+    button {
+      font-family: inherit;
+      font-size: 1.08rem;
+      border: none;
+      border-radius: 13px;
+      padding: 12px 26px;
+      margin: 12px 4px 0 0;
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.15s, color 0.18s, transform 0.16s;
+      font-weight: 600;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 16px #0003;
+      opacity: 0;
+      animation: buttonIn 0.5s forwards;
+    }
+    button:nth-of-type(1) { animation-delay: 0.07s;}
+    button:nth-of-type(2) { animation-delay: 0.16s;}
+    button:nth-of-type(3) { animation-delay: 0.24s;}
+    button:nth-of-type(4) { animation-delay: 0.32s;}
+    @keyframes buttonIn {
+      from { opacity: 0; transform: translateY(20px);}
+      to   { opacity: 1; transform: translateY(0);}
+    }
+    #addBtn { background: var(--pink); color: var(--dark);}
+    #startBtn, #relBtn { background: var(--yellow); color: var(--dark);}
+    #boisBtn { background: var(--blue); color: var(--dark);}
+    #skipBtn { background: #ff6585; color: var(--white);}
+    #homeBtn { background: #333; color: var(--pink); border: 2px solid var(--pink); margin-top: 12px; }
+    #scores { margin: 18px 0 18px; text-align: center;}
+    #scores span {
+      background: linear-gradient(90deg,var(--pink) 40%, var(--blue));
+      color: var(--dark);
+      padding: 5px 14px;
+      border-radius: 12px;
+      margin: 3px 6px;
+      font-size: 1rem;
+      display: inline-block;
+      box-shadow: 0 2px 7px #0003;
+    }
+    #card {
+      background: linear-gradient(120deg, #232347 70%, #4ac0f7 100%);
+      border-radius: 17px;
+      padding: 28px 12px 18px;
+      text-align: center;
+      min-height: 100px;
+      margin: 18px 0 22px;
+      color: var(--white);
+      font-size: 1.13rem;
+      box-shadow: 0 4px 20px #2228;
+      line-height: 1.5;
+      word-break: break-word;
+      letter-spacing: 0.5px;
+      border: 2px solid var(--pink);
+      position: relative;
+      transition: transform 0.5s cubic-bezier(.68,-0.2,.45,1.2), opacity 0.5s cubic-bezier(.68,-0.2,.45,1.2);
+      z-index: 2;
+      overflow: hidden;
+    }
+    .slide-left { transform: translateX(-160vw) rotate(-15deg); opacity: 0; }
+    .slide-right { transform: translateX(160vw) rotate(15deg); opacity: 0; }
+    .slide-down { transform: translateY(80vh) scale(0.95); opacity: 0; }
+    .badge {
+      display: inline-block;
+      padding: 6px 18px;
+      font-size: 0.95em;
+      border-radius: 12px 12px 12px 2px;
+      background: linear-gradient(90deg, var(--pink), var(--yellow), var(--blue));
+      color: #101010;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      margin-bottom: 9px;
+      margin-top: -14px;
+      box-shadow: 0 3px 15px #0003;
+    }
+    .solo { border-left: 5px solid var(--yellow);}
+    .all { border-left: 5px solid var(--blue);}
+    #playerList span { background: var(--blue); color: var(--dark); border-radius: 8px; padding: 4px 12px; margin: 2px 5px; display: inline-block; font-size: .96rem; }
+    #result { margin: 24px 0 20px; text-align: left; font-size: 1.1rem; }
+    .midBtn { background: var(--blue); color: var(--dark); margin-top: 12px; }
+    @media (max-width: 530px) { #main { padding: 14px 4vw 22px; } h1 { font-size: 2.08rem; } #card { font-size: 0.98rem; } }
+    ::selection { background: var(--yellow); color: var(--dark); }
+  </style>
+</head>
+<body>
+  <h1>Brise Lomerta</h1>
+  <div id="main"></div>
+  <script>
+    // Toutes les questions dans des objets avec catégorie et mode !
+    const cards = [
+      // Défi Alcool - SOLO
+      {cat:"Défi Alcool", mode:"SOLO", text:"Bois 4 gorgées… ou envoie un emoji 🍆 à ton dernier crush."},
+      {cat:"Défi Alcool", mode:"SOLO", text:'Appelle ton ex et dis-lui "je pense à toi"… ou bois cul sec.'},
+      {cat:"Défi Alcool", mode:"SOLO", text:"Bois 1 gorgée pour chaque message non lu dans ton tel."},
+      {cat:"Défi Alcool", mode:"SOLO", text:"Ouvre ton historique de recherche à la personne de ton choix… ou bois 3 gorgées."},
+      {cat:"Défi Alcool", mode:"SOLO", text:"Bois 5 gorgées si tu n’as pas couché depuis plus d’un mois (sois honnête)."},
+      {cat:"Défi Alcool", mode:"SOLO", text:"Montre la dernière photo reçue sur ton téléphone (hors perso) ou bois 2 gorgées."},
+      {cat:"Défi Alcool", mode:"SOLO", text:'Bois 3 gorgées… ou publie "j’ai envie de tendresse ce soir 🥺" en story.'},
+      {cat:"Défi Alcool", mode:"SOLO", text:"Bois 2 gorgées si tu es déjà sorti(e) avec 2 personnes en même temps."},
+      {cat:"Défi Alcool", mode:"SOLO", text:"Bois 1 gorgée pour chaque ex avec qui tu es toujours en contact."},
+      {cat:"Défi Alcool", mode:"SOLO", text:"Fais un shot… ou envoie un vocal sexy à un(e) pote."},
+      // Défi Alcool - Tous
+      {cat:"Défi Alcool", mode:"TOUT LE MONDE JOUE", text:"Tout le monde boit si quelqu’un ici t’a déjà attiré(e)."},
+      {cat:"Défi Alcool", mode:"TOUT LE MONDE JOUE", text:'Faites un "cheers" avec la personne qui vous attire le plus… sinon, buvez tous 2 gorgées.'},
+      {cat:"Défi Alcool", mode:"TOUT LE MONDE JOUE", text:'Tout le monde boit s’il/elle a déjà supprimé un message par honte.'},
+      {cat:"Défi Alcool", mode:"TOUT LE MONDE JOUE", text:"Celui qui a le plus de stories dans les dernières 24h boit 3 gorgées."},
+      {cat:"Défi Alcool", mode:"TOUT LE MONDE JOUE", text:"Le dernier à avoir eu un rapport boit un shot (ou avoue la date)."},
+      {cat:"Défi Alcool", mode:"TOUT LE MONDE JOUE", text:"Le premier qui regarde son téléphone boit 2 gorgées."},
+      {cat:"Défi Alcool", mode:"TOUT LE MONDE JOUE", text:"Celui/celle qui a le plus de matchs sur Tinder boit."},
+      {cat:"Défi Alcool", mode:"TOUT LE MONDE JOUE", text:"Tout le monde qui a déjà stalké un ex récemment boit."},
+      {cat:"Défi Alcool", mode:"TOUT LE MONDE JOUE", text:'Faites un vote : celui/celle qui a l’air le plus "chaud ce soir" boit 3 gorgées.'},
+      {cat:"Défi Alcool", mode:"TOUT LE MONDE JOUE", text:"Celui/celle qui a le plus de notifs non lues boit un shot."},
+      // Vérités osées - SOLO
+      {cat:"Vérités Osées", mode:"SOLO", text:"Dis le prénom de la personne avec qui tu as pris le plus de plaisir... ou bois 3 gorgées."},
+      {cat:"Vérités Osées", mode:"SOLO", text:"As-tu déjà couché avec deux personnes en moins de 24h ? Dis oui/non… ou bois."},
+      {cat:"Vérités Osées", mode:"SOLO", text:"Quelle est ta pratique sexuelle préférée ? Réponds ou bois 2 gorgées."},
+      {cat:"Vérités Osées", mode:"SOLO", text:"Dis si tu es plutôt dominant(e) ou soumis(e) au lit… ou bois un shot."},
+      {cat:"Vérités Osées", mode:"SOLO", text:"Donne le prénom de ton/ta partenaire le/la moins performant(e)… ou bois."},
+      {cat:"Vérités Osées", mode:"SOLO", text:"As-tu déjà menti pour coucher ? Dis ce que tu as dit, ou bois."},
+      {cat:"Vérités Osées", mode:"SOLO", text:"Avoue ta pire honte pendant l’acte… ou bois 3 gorgées."},
+      {cat:"Vérités Osées", mode:"SOLO", text:"Dis la chose la plus sale qu’on t’ait dite au lit… ou bois."},
+      {cat:"Vérités Osées", mode:"SOLO", text:"As-tu déjà couché avec quelqu’un dont tu ne te souviens plus du prénom ? Dis oui/non… ou bois."},
+      {cat:"Vérités Osées", mode:"SOLO", text:'Appelle un(e) pote et dis-lui "je te désire" d’un ton sérieux… ou bois cul sec.'},
+      // Vérités osées - Tous
+      {cat:"Vérités Osées", mode:"TOUT LE MONDE JOUE", text:"Tout le monde dit son nombre de partenaires ou boit 3 gorgées."},
+      {cat:"Vérités Osées", mode:"TOUT LE MONDE JOUE", text:"Tout le monde doit dire ce qui l’excite chez quelqu’un ici… ou boire."},
+      {cat:"Vérités Osées", mode:"TOUT LE MONDE JOUE", text:'Tout le monde doit voter : qui est le/la plus "chaud(e)" ici ?'},
+      {cat:"Vérités Osées", mode:"TOUT LE MONDE JOUE", text:"Tout le monde dit s’il a déjà couché sans capote… ou boit."},
+      {cat:"Vérités Osées", mode:"TOUT LE MONDE JOUE", text:"Celui ou celle qui a déjà trompé boit 2 gorgées."},
+      {cat:"Vérités Osées", mode:"TOUT LE MONDE JOUE", text:"Celui ou celle qui s’est déjà filmé(e) dans un moment intime doit lever la main ou boire."},
+      {cat:"Vérités Osées", mode:"TOUT LE MONDE JOUE", text:"Tout le monde dit ce qu’il/elle préfère faire au lit… ou boit."},
+      {cat:"Vérités Osées", mode:"TOUT LE MONDE JOUE", text:"Celui qui avoue avoir couché dans le lieu le plus chelou est dispensé de boire. Les autres : 2 gorgées."},
+      {cat:"Vérités Osées", mode:"TOUT LE MONDE JOUE", text:"Tout le monde dit s’il/elle a déjà été dans une relation toxique. Sinon : 2 gorgées."},
+      {cat:"Vérités Osées", mode:"TOUT LE MONDE JOUE", text:"Tout le monde écrit anonymement un fantasme. On les lit tous à voix haute. Si tu refuses : 3 gorgées."},
+      // Actions sexy - SOLO
+      {cat:"Actions Sexy", mode:"SOLO", text:'Envoie à un(e) pote un message ambigu : "Tu me manques ce soir…" ou bois.'},
+      {cat:"Actions Sexy", mode:"SOLO", text:"Prends un selfie sexy ici, maintenant… ou bois 3 gorgées."},
+      {cat:"Actions Sexy", mode:"SOLO", text:"Fais un bisou dans le cou à la personne de ton choix… ou bois."},
+      {cat:"Actions Sexy", mode:"SOLO", text:'Chuchote "Je te veux" à quelqu’un ici, regard intense obligatoire… ou bois.'},
+      {cat:"Actions Sexy", mode:"SOLO", text:"Propose à quelqu’un de faire un mini slow avec toi… ou bois."},
+      {cat:"Actions Sexy", mode:"SOLO", text:'Regarde la personne à ta droite dans les yeux et dis : "Tu sais ce que je veux…" ou bois.'},
+      {cat:"Actions Sexy", mode:"SOLO", text:'Prends la main de quelqu’un et dis : "On en reparlera après la partie…" ou bois.'},
+      {cat:"Actions Sexy", mode:"SOLO", text:"Imite ta façon de séduire en 10 secondes… ou bois 2 gorgées."},
+      {cat:"Actions Sexy", mode:"SOLO", text:"Envoie un cœur à un ex… ou bois un shot."},
+      {cat:"Actions Sexy", mode:"SOLO", text:"Décris ta tenue idéale pour une nuit torride… ou bois."},
+      // Actions sexy - Tous
+      {cat:"Actions Sexy", mode:"TOUT LE MONDE JOUE", text:"Tout le monde fait un clin d’œil à la personne de son choix… ou boit 1 gorgée."},
+      {cat:"Actions Sexy", mode:"TOUT LE MONDE JOUE", text:"Tout le monde mime un moment sexy (restons soft) ou boit 2 gorgées."},
+      {cat:"Actions Sexy", mode:"TOUT LE MONDE JOUE", text:"Celui ou celle qui fait la meilleure imitation d’un baiser reçoit l’immunité, les autres boivent."},
+      {cat:"Actions Sexy", mode:"TOUT LE MONDE JOUE", text:"Tour de compliments sexy : chacun doit en faire un à quelqu’un ou boire."},
+      {cat:"Actions Sexy", mode:"TOUT LE MONDE JOUE", text:"Tout le monde fait une danse lente, yeux fermés, comme s’il y avait slow."},
+      {cat:"Actions Sexy", mode:"TOUT LE MONDE JOUE", text:"Tout le monde envoie un emoji sexy dans un groupe au hasard… ou boit."},
+      {cat:"Actions Sexy", mode:"TOUT LE MONDE JOUE", text:"Chacun chuchote un mot chaud à l’oreille d’un joueur différent. Pas de mot ? 2 gorgées."},
+      {cat:"Actions Sexy", mode:"TOUT LE MONDE JOUE", text:"Tout le monde vote : qui a le regard le plus intense ? Le ou la gagnant(e) choisit qui boit."},
+      {cat:"Actions Sexy", mode:"TOUT LE MONDE JOUE", text:"Tout le monde écrit un message sexy fictif, les messages sont tirés au sort et lus à voix haute."},
+      {cat:"Actions Sexy", mode:"TOUT LE MONDE JOUE", text:"Tout le monde doit poser sa main sur quelqu’un d’autre pendant 5 secondes… ou boire."},
+      // Mini-jeux - SOLO
+      {cat:"Mini-jeux", mode:"SOLO", text:'Fais une impro de 30 secondes "Comment draguer dans une église".'},
+      {cat:"Mini-jeux", mode:"SOLO", text:"Chante une chanson sexy… comme si tu faisais une déclaration d’amour à ton frigo."},
+      {cat:"Mini-jeux", mode:"SOLO", text:"Fais une pub torride pour une brosse à dents."},
+      {cat:"Mini-jeux", mode:"SOLO", text:"Mime une position improbable du kamasutra (sans trop exagérer) ou bois."},
+      {cat:"Mini-jeux", mode:"SOLO", text:"Fais semblant de faire l’amour à une chaise… ou bois 3 gorgées."},
+      {cat:"Mini-jeux", mode:"SOLO", text:'Crée une chorégraphie de 10 sec façon "Je suis prêt(e) pour ce soir".'},
+      {cat:"Mini-jeux", mode:"SOLO", text:"Raconte un fantasme façon conte pour enfants… ou bois."},
+      {cat:"Mini-jeux", mode:"SOLO", text:'Fais une impro "Speed date avec quelqu’un d’horrible"… ou bois.'},
+      {cat:"Mini-jeux", mode:"SOLO", text:"Mime une rupture ultra dramatique comme dans une telenovela."},
+      {cat:"Mini-jeux", mode:"SOLO", text:"Fais une vidéo TikTok sexy improvisée (sans la poster)… ou bois un shot."},
+      // Mini-jeux - Tous
+      {cat:"Mini-jeux", mode:"TOUT LE MONDE JOUE", text:"Tout le monde mime une scène d’amour sans se toucher. Rires = 1 gorgée."},
+      {cat:"Mini-jeux", mode:"TOUT LE MONDE JOUE", text:"Tout le monde écrit un mot hot, les mots sont mimés anonymement."},
+      {cat:"Mini-jeux", mode:"TOUT LE MONDE JOUE", text:"Tout le monde chante une chanson d’amour façon ASMR."},
+      {cat:"Mini-jeux", mode:"TOUT LE MONDE JOUE", text:'Faites une impro à deux : "Première nuit ensemble après 5 ans d’attente".'},
+      {cat:"Mini-jeux", mode:"TOUT LE MONDE JOUE", text:"Tout le monde mime un orgasme silencieux… le plus crédible désigne qui boit."},
+      {cat:"Mini-jeux", mode:"TOUT LE MONDE JOUE", text:"Chacun choisit un emoji sexy et l’interprète physiquement."},
+      {cat:"Mini-jeux", mode:"TOUT LE MONDE JOUE", text:"Tout le monde imite un(e) prof qui tente de séduire un(e) élève adulte."},
+      {cat:"Mini-jeux", mode:"TOUT LE MONDE JOUE", text:"Concours de soupirs sexy : le plus gênant gagne, les autres boivent."},
+      {cat:"Mini-jeux", mode:"TOUT LE MONDE JOUE", text:"Tout le monde fait une déclaration d’amour absurde à un objet de la pièce."},
+      {cat:"Mini-jeux", mode:"TOUT LE MONDE JOUE", text:'Tout le monde mime "se faire surprendre au lit" – le plus drôle est safe, les autres boivent.'},
+    ];
+
+    const main = document.getElementById('main');
+    let players = [], scores = {}, deck = [], curPlayer = 0, curCard = 0, tourJoue = 0;
+
+    function showPlayerForm() {
+      main.innerHTML = `
+        <h2>Ajoute les joueurs</h2>
+        <input id="playerInput" placeholder="Nom du joueur" autofocus>
+        <button id="addBtn">Ajouter</button>
+        <div id="playerList"></div>
+        <button id="startBtn">Commencer</button>
+      `;
+      main.classList.add('fade-in');
+      document.getElementById('addBtn').onclick = () => {
+        const name = document.getElementById('playerInput').value.trim();
+        if (name && !players.includes(name)) {
+          players.push(name);
+          scores[name] = 0;
+          updatePlayerList();
+        }
+        document.getElementById('playerInput').value = "";
+        document.getElementById('playerInput').focus();
+      };
+      document.getElementById('startBtn').onclick = () => {
+        if (players.length < 2) { alert('Ajoute au moins 2 joueurs !'); return; }
+        startGame();
+      };
+      function updatePlayerList() {
+        document.getElementById('playerList').innerHTML = players.map(p => `<span>${p}</span>`).join(' ');
+      }
+    }
+
+    function startGame() {
+      const n = Math.floor(cards.length / players.length);
+      deck = [];
+      let pool = [...cards];
+      for (let p of players) {
+        let pCards = [];
+        for (let i = 0; i < n; i++) {
+          let idx = Math.floor(Math.random() * pool.length);
+          pCards.push({ ...pool[idx], owner: p });
+          pool.splice(idx, 1);
+        }
+        deck = deck.concat(pCards);
+      }
+      shuffle(deck);
+      curPlayer = 0; curCard = 0; tourJoue = 0;
+      showCard();
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    function showCard() {
+      if (curCard >= deck.length) { showResult(); return; }
+      const card = deck[curCard];
+      main.innerHTML = `
+        <div id="scores">${players.map(p => `<span>${p}: ${scores[p]}</span>`).join(' ')}</div>
+        <div><b>À ${players[curPlayer]} de jouer</b></div>
+        <div id="card" class="${card.mode==='SOLO'?'solo':'all'}">
+          <div class="badge">${card.cat} <span style="font-size:.93em">${card.mode}</span></div>
+          <div style="margin-top:12px;">${card.text}</div>
+        </div>
+        <button id="relBtn">Je relève le défi (+2)</button>
+        <button id="boisBtn">Je bois (+1)</button>
+        <button id="skipBtn">Je ne joue pas (-1)</button>
+        <button id="homeBtn" class="home-btn">Accueil</button>
+      `;
+      main.classList.remove('result-anim');
+      main.classList.add('fade-in');
+      const relBtn = document.getElementById('relBtn');
+      const boisBtn = document.getElementById('boisBtn');
+      const skipBtn = document.getElementById('skipBtn');
+      relBtn.onclick = () => animateCard('slide-left', ()=>{ scores[card.owner] += 2; next(); });
+      boisBtn.onclick = () => animateCard('slide-right', ()=>{ scores[card.owner] += 1; next(); });
+      skipBtn.onclick = () => animateCard('slide-down', ()=>{ scores[card.owner] -= 1; next(); });
+      document.getElementById('homeBtn').onclick = () => resetToHome();
+    }
+
+    function animateCard(anim, cb) {
+      const cardEl = document.getElementById('card');
+      cardEl.classList.add(anim);
+      setTimeout(cb, 450);
+    }
+
+    function next() {
+      curCard++;
+      curPlayer = (curPlayer + 1) % players.length;
+      tourJoue++;
+      if (tourJoue % players.length === 0 && curCard < deck.length) {
+        showMidScreen();
+      } else {
+        showCard();
+      }
+    }
+
+    function showMidScreen() {
+      main.innerHTML = `
+        <h2>Fin du tour</h2>
+        <div id="scores">${players.map(p => `<span>${p}: ${scores[p]}</span>`).join(' ')}</div>
+        <button id="continueBtn" class="midBtn">Continuer la partie</button>
+        <button id="finishBtn" class="midBtn">Afficher le classement</button>
+      `;
+      main.classList.add('fade-in');
+      document.getElementById('continueBtn').onclick = () => showCard();
+      document.getElementById('finishBtn').onclick = () => showResult();
+    }
+
+    function showResult() {
+      let sorted = players.slice().sort((a,b)=>scores[b]-scores[a]);
+      main.innerHTML = `<h2>Classement final</h2>
+        <div id="result" class="result-anim">${sorted.map((p,i)=>`${i+1}. ${p}: ${scores[p]} pts`).join('<br>')}</div>
+        <button onclick="location.reload()" id="replayBtn">Rejouer</button>
+        <button id="homeBtn" class="home-btn">Accueil</button>
+      `;
+      main.classList.remove('fade-in');
+      main.classList.add('result-anim');
+      document.getElementById('homeBtn').onclick = () => resetToHome();
+    }
+
+    function resetToHome() {
+      players = [];
+      scores = {};
+      deck = [];
+      curPlayer = 0;
+      curCard = 0;
+      tourJoue = 0;
+      showPlayerForm();
+    }
+
+    showPlayerForm();
+  </script>
+</body>
+</html>
