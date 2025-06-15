@@ -1,7 +1,6 @@
-More actions
 ## 🚀 Mise en ligne
 
-Hébergé sur GitHub Pages, Vercel, ou accessible localement.
+Hébergé sur GitHub Pages par **Omerta Team**
 
 ## 📄 Licence
 
